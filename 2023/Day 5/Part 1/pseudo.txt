@@ -1,0 +1,9 @@
+extract mapping information from data
+store mapping information into lists
+
+loop through each list of information
+    create a new dictionary with source: destination pairings
+    loop through the 3 numbers in each list entry
+        repeat n times while n < third number and n starting at 0
+            add a new key-value pair to the dictionary with the key as "second number + n" and 
+            value as "first number + n"
