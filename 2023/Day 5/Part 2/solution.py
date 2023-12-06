@@ -62,7 +62,7 @@ class Range:
             ------- (Our range)
                ---- (Intersecting range)
             """
-            return [Range(intersection.lower, self.lower)]
+            return [Range(self.lower, intersection.lower)]
         else:
             """
             If none of the ranges' values match, return a list of two Range() objects containing the lower and upper values respectively
@@ -71,7 +71,7 @@ class Range:
             --------- (Our range)
               ---     (Intersecting range)
             """
-            return [Range(intersection.lower, self.lower), Range(intersection.upper, self.upper)]
+            return [Range(self.lower, intersection.lower), Range(intersection.upper, self.upper)]
     
     def add(self, offset: int | float):
         return Range(self.lower + offset, self.upper + offset)
