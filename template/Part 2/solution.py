@@ -3,7 +3,7 @@ class Part2():
         pass
 
     def read_data(self):
-        with open("testcases.txt", "r") as f:
+        with open("sample.txt", "r") as f:
             document = f.read()
         return document
 
