@@ -30,7 +30,3 @@ class Part1():
         res = self.evaluate(self.duration, self.record)
         total *= res
         print(total)
-
-if __name__ == "__main__":
-    part1 = Part1()
-    part1.main()

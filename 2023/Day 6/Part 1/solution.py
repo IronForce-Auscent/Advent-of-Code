@@ -16,20 +16,17 @@ class Part1():
                 count += 1
         return count
 
-    def main(self):
-        data = self.read_data().split("\n")
-        self.charge_up.extend(data[0].split()[1:])
-        self.record.extend(data[1].split()[1:])
-        total = 1
-        for (duration, record) in zip(self.charge_up, self.record):
-            duration, record = list(map(int, (duration, record)))
-            print(f"Race duration: {duration}")
-            print(f"Current record: {record}")
-            res = self.evaluate(duration, record)
-            total *= res
-            print(f"Possible ways to beat record: {res}")
-        print(total)
-
-if __name__ == "__main__":
-    part1 = Part1()
-    part1.main()
+def main():
+    solver = Part1()
+    data = solver.read_data().split("\n")
+    solver.charge_up.extend(data[0].split()[1:])
+    solver.record.extend(data[1].split()[1:])
+    total = 1
+    for (duration, record) in zip(solver.charge_up, solver.record):
+        duration, record = list(map(int, (duration, record)))
+        print(f"Race duration: {duration}")
+        print(f"Current record: {record}")
+        res = solver.evaluate(duration, record)
+        total *= res
+        print(f"Possible ways to beat record: {res}")
+    return total
