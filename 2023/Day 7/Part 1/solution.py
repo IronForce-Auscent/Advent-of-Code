@@ -28,6 +28,40 @@ class Part1():
             hands.append(hand)
             bets.append(bet)
         return hands, bets
+    
+    def calculate_rankings(self, hand: str):
+        indiv_cards = collections.Counter(hand)
+        print(indiv_cards)
+        if len(indiv_cards) == 1:
+            return Rankings.FIVE_OF_A_KIND
+        elif len(indiv_cards) == 5:
+            return Rankings.HIGH_CARD
+        elif len(indiv_cards) == 2:
+            values = indiv_cards.values()
+            if 2 in values and 3 in values:
+                return Rankings.FULL_HOUSE
+            elif 1 in values and 4 in values:
+                return Rankings.FOUR_OF_A_KIND
+            else:
+                print(indiv_cards)
+                raise Exception("How did you get here?")
+        elif len(indiv_cards) == 3 or len(indiv_cards) == 4:
+            values = indiv_cards.values()
+            if 1 in values and 3 in values:
+                return Rankings.THREE_OF_A_KIND
+            elif 1 in values and 2 in values:
+                s, n = 0, 0
+                for value in values:
+                    if value == 2:
+                        s += 1
+                    elif value == 1:
+                        n += 1
+                if s == 2 and n == 1:
+                    return Rankings.TWO_PAIRS
+                elif s == 1 and n == 3:
+                    return Rankings.ONE_PAIR
+                else:
+                    raise Exception("How did we get here?")
 
     def calculate_scores(self, hand_bets: list):
         hand = hand_bets[0]
