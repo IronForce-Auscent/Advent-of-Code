@@ -1,4 +1,4 @@
-class Part1():
+class Solver():
     def __init__(self):
         pass
 
@@ -11,5 +11,5 @@ class Part1():
         data = self.read_data()
 
 if __name__ == "__main__":
-    part1 = Part1()
-    part1.main()
+    solver = Solver()
+    solver.main()

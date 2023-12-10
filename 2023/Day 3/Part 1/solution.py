@@ -1,96 +1,79 @@
-class Part1():
+class Solver():
     def __init__(self):
-        self.schematic = None
-        self.valid_numbers = []
-        self.non_symbols = "0123456789."
-        self.max_x = 0 # length 10 for modified_sample
-        self.max_y = 0 # length 13 for modified_sample
+        self.number_locations = {}
+        self.valid_ids = []
+        self.schematics = []
+        self.valid_chars = "0123456789."
 
     def read_data(self):
-        with open("testcases.txt", "r") as f:
-            self.schematic = f.read()
+        with open("input.txt", "r") as f:
+            document = f.read().splitlines()
+        return document
     
-    def get_neighbour_coordinates(self, x: int, y: int) -> list[list[int, int]]:
-        coordinates = []
-        for dtx in (-1, 0, 1):
-            for dty in (-1, 0, 1):
-                if (dtx, dty) == (0, 0):
-                    continue                
-                new_x, new_y = x, y
-                if 0 <= (x + dtx) < self.max_x:
-                    new_x = x + dtx
-                else:
-                    new_x = x
-                if 0 <= (y + dty) < self.max_y:
-                    new_y = y + dty
-                else:
-                    new_y = y
-                coordinates.append([new_x, new_y])
-        return coordinates
-    
-    def check_neighbours(self, x: int, y: int):
-        neighbours = self.get_neighbour_coordinates(x, y)
-        for neighbour in neighbours:
-            nbx, nby = neighbour[0], neighbour[1]
-            if self.schematic[nby][nbx] not in self.non_symbols:
-                return True
-            else:
-                continue
-        return False
-        
-    def calculate_valid_engine_parts(self):
-        x, y = 0, 0
-        while y < self.max_y:
-            x = 0
-            while x < self.max_x:
-                current_char = self.schematic[y][x]
+    def get_numloc(self, schematics: list[str]):
+        for y, schematic in enumerate(schematics):
+            i = 0
+            while i < len(schematic):
+                current_char = schematic[i]
                 if current_char.isdigit():
-                    number = ""
-                    peek_x = x
-                    while current_char.isdigit():
-                        number += current_char
-                        if peek_x + 1 < self.max_x:
-                            peek_x += 1
-                            current_char = self.schematic[y][peek_x]
-                        else:
-                            current_char = "."
-                    print(f"Peek value :{peek_x}")
-                    print(number)
-                    for num_x in range(x, peek_x):
-                        print(num_x)
-                        response = self.check_neighbours(num_x, y)
-                        if response:
-                            self.valid_numbers.append(int(number))
+                    new_num = ""
+                    for n in range(3):
+                        current_char = schematic[i+n]
+                        if not current_char.isdigit():
                             break
-                    x = peek_x
-                x += 1
-            y += 1
+                        new_num += str(current_char)
+                    self.number_locations[int(new_num)] = [(i + x, y) for x in range(0, len(new_num))]
+                    i += len(new_num)
+                i += 1
 
-    def generate_guardroom(self):
-        x = "."*self.max_x
-        y = []
-        y.append(x)
-        for line in self.schematic:
-            tmp = "." + line + "."
-            y.append(tmp)
-        y.append(x)
-        self.schematic = y
-    
-    def update_border_lengths(self):
-        self.max_x = len(self.schematic[0])
-        self.max_y = len(self.schematic)
+    def create_guardrails(self, schematics: list[str]):
+        new_schematic = []
+        x, y = len(schematics[0]), len(schematics)
+        top_bottom_guardrails = ''.join("." for _ in range(x + 2))
+        new_schematic.append(top_bottom_guardrails)
+        for schematic in schematics:
+            n = "." + schematic + "."
+            new_schematic.append(n)
+        new_schematic.append(top_bottom_guardrails)
+        return new_schematic
 
+    def check_neighbors(self):
+        for number, coordinates in self.number_locations.items():
+            for coordinate in coordinates:
+                for dtx in (-1, 0, 1):
+                    for dty in (-1, 0, 1):
+                        if (dtx, dty) == (0, 0):
+                            continue
+                        new_x, new_y = coordinate[0] + dtx, coordinate[1] + dty
+                        if (new_x, new_y) in coordinates:
+                            continue
+
+                        if str(self.schematics[new_y][new_x]) not in self.valid_chars:
+                            if number in self.valid_ids:
+                                pass
+                            else:
+                                self.valid_ids.append(number)
 
     def main(self):
-        self.read_data()
-        self.schematic = self.schematic.split()
-        self.update_border_lengths()
-        self.generate_guardroom()
-        self.update_border_lengths()
-        self.calculate_valid_engine_parts()
-        print(self.valid_numbers)
-        print(sum(self.valid_numbers))
+        schematic = self.read_data()
+        padded_schematic = self.create_guardrails(schematic)
+        """
+        Padded schematic: 
+        ['............', '.467..114...', '....*.......', '...35..633..', '.......#....', '.617*.......', '......+.58..', 
+        '...592......', '.......755..', '....$.*.....', '..664.598...', '............']
+        """
+        self.get_numloc(padded_schematic)
+        print(self.number_locations)
+        self.schematics.extend(padded_schematic)
+        self.check_neighbors()
+        print(f"Valid IDs: {self.valid_ids}")
+        print(f"Sum of IDs: {sum(self.valid_ids)}")
+
 
 if __name__ == "__main__":
-    part1 = Part1()
-    part1.main()
+    import time
+    start = time.perf_counter()
+    solver = Solver()
+    solver.main()
+    delta = time.perf_counter() - start
+    print(f"Execution time: {delta} seconds")
