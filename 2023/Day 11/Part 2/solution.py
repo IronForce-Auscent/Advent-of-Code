@@ -66,7 +66,6 @@ class Solver():
         universe = self.read_data()
         self.universe = self.parse_to_2d_array(universe)
         self.empty_rows, self.empty_columns = self.count_empty_sections()
-        print(self.empty_rows, self.empty_columns)
         self.coordinates = self.parse_galaxies()
         
         expanded_coordinates = []
