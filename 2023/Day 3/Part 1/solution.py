@@ -6,7 +6,7 @@ class Solver():
         self.valid_chars = "0123456789."
 
     def read_data(self):
-        with open("input.txt", "r") as f:
+        with open("modified.txt", "r") as f:
             document = f.read().splitlines()
         return document
     
@@ -22,7 +22,10 @@ class Solver():
                         if not current_char.isdigit():
                             break
                         new_num += str(current_char)
-                    self.number_locations[int(new_num)] = [(i + x, y) for x in range(0, len(new_num))]
+                    if int(new_num) not in self.number_locations.keys():
+                        self.number_locations[int(new_num)] = [(i + x, y) for x in range(0, len(new_num))]
+                    else:
+                        self.number_locations[int(new_num)].extend([(i + x, y) for x in range(0, len(new_num))])
                     i += len(new_num)
                 i += 1
 
@@ -39,8 +42,14 @@ class Solver():
 
     def check_neighbors(self):
         for number, coordinates in self.number_locations.items():
+            print(f"Current number: {number}; Current coordinate set: {coordinates}")
+            jump_to_next = False
             for coordinate in coordinates:
+                if jump_to_next:
+                    break
                 for dtx in (-1, 0, 1):
+                    if jump_to_next:
+                        break
                     for dty in (-1, 0, 1):
                         if (dtx, dty) == (0, 0):
                             continue
@@ -49,10 +58,9 @@ class Solver():
                             continue
 
                         if str(self.schematics[new_y][new_x]) not in self.valid_chars:
-                            if number in self.valid_ids:
-                                pass
-                            else:
-                                self.valid_ids.append(number)
+                            print(f"Valid number: {number}")
+                            self.valid_ids.append(number)
+                            jump_to_next = True
 
     def main(self):
         schematic = self.read_data()
