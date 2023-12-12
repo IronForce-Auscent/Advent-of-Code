@@ -1,5 +1,6 @@
+from utils.aoc_math import calculate_manhatten_distance 
+
 import numpy as np
-import tcod
 import itertools
 
 class Solver():
@@ -70,25 +71,20 @@ class Solver():
         
         self.universe = self.universe.astype(int)
         return coordinates
-    
-    def calculate_manhatten_distance(self, origin: tuple[int, int], destination: tuple[int, int]):
-        return abs(origin[0] - destination[0]) + abs(origin[1] - destination[1])
 
     def main(self):
         universe = self.read_data()
         self.universe = self.parse_to_2d_array(universe)
         self.expand_universe()
         coordinates = self.parse_galaxies()
-        print(f"Coordinates of galaxies: {coordinates}")
         
         self.coordinates = coordinates
         pairings = list(itertools.combinations(self.coordinates, 2))
         distances = []
         for pairing in pairings:
             start, end = pairing
-            distance = self.calculate_manhatten_distance(start, end)
+            distance = calculate_manhatten_distance(start, end)
             distances.append(distance)
-        print(f"All distances: {distances}")
         print(f"Sum of distances: {sum(distances)}")
 
 
