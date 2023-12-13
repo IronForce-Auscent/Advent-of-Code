@@ -1,6 +1,5 @@
 # Custom ignored files
 input.txt
-template_year/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
