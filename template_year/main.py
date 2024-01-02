@@ -1,5 +1,5 @@
 from dotenv import load_dotenv
-from utils.aoc_input import AOC_Input
+from template_year.utils.c_input import AOC_Input
 from typing import *
 
 import importlib
